@@ -4,8 +4,6 @@ from benchopt import BaseObjective, safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    import skada
-    import sklearn
     from skada.model_selection import (StratifiedDomainShuffleSplit,
                                        DomainShuffleSplit
                                        )
@@ -45,19 +43,7 @@ class Objective(BaseObjective):
     ]
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
-    min_benchopt_version = "1.5"
-
-    print(sklearn)
-    print(skada)
-    print('---')
-    
-
-    metrics = {
-        'accuracy': accuracy_score,
-        'balanced_accuracy': balanced_accuracy_score,
-        'f1_score': f1_score,
-        'roc_auc_score': roc_auc_score,
-    }
+    min_benchopt_version = "1.5"    
 
     def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
@@ -88,6 +74,13 @@ class Objective(BaseObjective):
 
         # This method can return many metrics in a dictionary. One of these
         # metrics needs to be `value` for convergence detection purposes.
+
+        metrics = {
+            'accuracy': accuracy_score,
+            'balanced_accuracy': balanced_accuracy_score,
+            'f1_score': f1_score,
+            'roc_auc_score': roc_auc_score,
+        }
 
         # Train target-source split
         (X_train_source, X_train_target,
