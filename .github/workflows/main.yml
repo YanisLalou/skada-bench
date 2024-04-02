@@ -13,14 +13,15 @@ on:
   schedule:
     # Run every day at 7:42am UTC.
     - cron:  '42 7 * * *'
+  workflow_dispatch:
 
 jobs:
   benchopt_dev:
-    uses: benchopt/template_benchmark/.github/workflows/test_benchmarks.yml@main
+    uses: YanisLalou/skada-bench/.github/workflows/test_benchmarks.yml@main
     with:
       benchopt_branch: benchopt@main
   benchopt_release:
-    uses: benchopt/template_benchmark/.github/workflows/test_benchmarks.yml@main
+    uses: YanisLalou/skada-bench/.github/workflows/test_benchmarks.yml@main
     with:
       benchopt_version: latest
   lint:
