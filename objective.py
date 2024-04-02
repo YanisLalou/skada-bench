@@ -4,6 +4,7 @@ from benchopt import BaseObjective, safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    import skada
     from skada.model_selection import (StratifiedDomainShuffleSplit,
                                        DomainShuffleSplit
                                        )
@@ -44,6 +45,11 @@ class Objective(BaseObjective):
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
     min_benchopt_version = "1.5"
+
+    print(sklearn)
+    print(skada)
+    print('---')
+    
 
     metrics = {
         'accuracy': accuracy_score,
