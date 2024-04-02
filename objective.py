@@ -5,6 +5,7 @@ from benchopt import BaseObjective, safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     import skada
+    import sklearn
     from skada.model_selection import (StratifiedDomainShuffleSplit,
                                        DomainShuffleSplit
                                        )
