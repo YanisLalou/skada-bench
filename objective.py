@@ -39,7 +39,7 @@ class Objective(BaseObjective):
 
     # List of packages needed to run the benchmark.
     requirements = [
-        'scikit-learn',
+        'pip:scikit-learn',
         'pip:git+https://github.com/scikit-adaptation/skada.git'
     ]
     # Minimal version of benchopt required to run this benchmark.
