@@ -144,7 +144,7 @@ class Dataset(BaseDataset):
         dataset = ImageDataset(self.path_extract, transform=preprocess, domain_select=domain_select)
         #dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
         # TODO: set batch_size=len(dataset), rn its 10k for testing purposes ONLY
-        dataloader = DataLoader(dataset, batch_size=10000, shuffle=True)
+        dataloader = DataLoader(dataset, batch_size=1000, shuffle=True)
 
         images, labels = next(iter(dataloader))
         images = images.numpy()

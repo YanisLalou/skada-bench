@@ -113,7 +113,13 @@ class Objective(BaseObjective):
         for criterion, estimator in dict_estimators.items():
             # TRAIN metrics
             # Source accuracy
-            y_pred_train_source = estimator.predict(X_train_source)
+            try:
+                y_pred_train_source = estimator.predict(X_train_source)
+            except Exception as e:
+                print(e)
+                print(X_train_source.shape)
+                print(X_train_source)
+                print('----')
             y_pred_train_source_proba = estimator.predict_proba(X_train_source)
 
             # Target accuracy
