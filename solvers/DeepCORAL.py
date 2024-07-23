@@ -36,7 +36,7 @@ class ResNet50WithMLP(nn.Module):
         )
        
 
-    def forward(self, x):
+    def forward(self, x, sample_weight=None):
         x = x.reshape((x.shape[0], 3, 224, 224))
         x = self.features(x)
         x = self.flatten(x)
@@ -56,9 +56,9 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'max_epochs': [10],
-        'optimizer__weight_decay': [1e-5],
-        'lr': [1e-2]
+        'max_epochs': [20, 50],
+        'optimizer__weight_decay': [1e-5, 1e-4, 1e-3],
+        'lr': [1e-2, 1e-3, 1e-4],
     }
 
 
@@ -69,7 +69,7 @@ class Solver(DASolver):
             optimizer=Adam,
             reg=1,
             layer_name="mlp",
-            batch_size=128,
+            batch_size=256,
             max_epochs=1,
             train_split=None,
             device=device,
