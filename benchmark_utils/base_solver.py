@@ -119,6 +119,8 @@ class DASolver(BaseSolver):
         device = torch.device("cuda")
     else:
         device = torch.device("cpu")
+    print(f"n_jobs: {n_jobs}")
+    print(f"device: {device}")
 
     @abstractmethod
     def get_estimator(self):

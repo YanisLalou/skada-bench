@@ -13,6 +13,9 @@ with safe_import_context() as import_ctx:
     import torchvision.models as models
     from torch.optim import Adam
     import collections
+    import psutil
+    import GPUtil
+    from skorch.callbacks import Callback
 
 
 class ResNet50WithMLP(nn.Module):
@@ -56,7 +59,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'max_epochs': [20, 50],
+        'max_epochs': [20],
         'optimizer__weight_decay': [1e-5, 1e-4, 1e-3],
         'lr': [1e-2, 1e-3, 1e-4],
     }
@@ -69,10 +72,43 @@ class Solver(DASolver):
             optimizer=Adam,
             reg=1,
             layer_name="mlp",
-            batch_size=256,
+            batch_size=128,
             max_epochs=1,
             train_split=None,
             device=device,
+            #callbacks=[GPUUsageCallback()],
         )
 
         return net
+
+class GPUUsageCallback(Callback):
+    def on_epoch_end(self, net, **kwargs):
+        self.check_multi_gpu_usage()
+
+    @staticmethod
+    def check_multi_gpu_usage():
+        if torch.cuda.is_available():
+            num_gpus = torch.cuda.device_count()
+            
+            if num_gpus > 0:
+                print(f"\nCUDA is available. Found {num_gpus} GPU(s).")
+                
+                for i in range(num_gpus):
+                    torch.cuda.set_device(i)
+                    print(f"\nGPU {i}: {torch.cuda.get_device_name(i)}")
+                    
+                    gpus = GPUtil.getGPUs()
+                    gpu = gpus[i]
+                    print(f"  Utilization: {gpu.load * 100:.2f}%")
+                    print(f"  Memory usage: {gpu.memoryUsed / gpu.memoryTotal * 100:.2f}%")
+                    
+                    if torch.cuda.current_device() == i:
+                        print("  This GPU is currently being used by PyTorch.")
+                    else:
+                        print("  This GPU is available but not currently used by PyTorch.")
+            else:
+                print("\nCUDA is available but no GPUs are accessible.")
+        else:
+            print("\nCUDA is not available. Using CPU.")
+        
+        print(f"\nCPU usage: {psutil.cpu_percent()}%")
