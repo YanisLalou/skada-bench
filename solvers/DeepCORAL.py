@@ -16,6 +16,7 @@ with safe_import_context() as import_ctx:
     import psutil
     import GPUtil
     from skorch.callbacks import Callback
+    import os
 
 
 class ResNet50WithMLP(nn.Module):
@@ -48,6 +49,8 @@ class ResNet50WithMLP(nn.Module):
 
         return x
 
+# Get the scheduler address from the environment variable
+#scheduler_address = os.environ.get('SCHEDULER_ADDRESS', None)
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
@@ -59,11 +62,11 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'max_epochs': [20],
+        'max_epochs': [30],
         'optimizer__weight_decay': [1e-5, 1e-4, 1e-3],
         'lr': [1e-2, 1e-3, 1e-4],
     }
-
+    #dask_scheduler=scheduler_address
 
     def get_estimator(self, n_classes, device):
         model = ResNet50WithMLP(n_classes=n_classes)
@@ -80,6 +83,7 @@ class Solver(DASolver):
         )
 
         return net
+
 
 class GPUUsageCallback(Callback):
     def on_epoch_end(self, net, **kwargs):
